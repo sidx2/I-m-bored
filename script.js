@@ -1,63 +1,84 @@
 const canvas = document.getElementById("canvas")
+const beforeStart = document.getElementById("beforeStart")
 const ctx = canvas.getContext("2d")
 
 canvas.height = window.innerHeight
 canvas.width = window.innerWidth
 
-// const backgroundImage = new Image()
-// backgroundImage.src = "./assets/images/background.jpg"
-// const fireSound = new Audio("./assets/audio/fire.mp3")
-// const dieSound = new Audio("./assets/audio/die.mp3")
+const backgroundMusic = new Audio("./assets/audio/bg.mp3")
+backgroundMusic.loop = true
 
 window.onload = () => {
-    alert("Up Down Arrow Keys to move\nSpace bar to shoot")
-
+    const OK = confirm("Up Down Arrow Keys to move\nSpace bar to shoot")
 }
 
-const playerMain = new Player(200, 500, 75, 75)
-const bullets = []
-const enemies = []
-let frame = 0
+window.addEventListener("click", (e) => {
+    beforeStart.style.display = 'none'
+    canvas.style.display = 'flex'
+    game()
+    backgroundMusic.play()
+})
 
-const animate = () => {
-    ctx.fillStyle = 'white'
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
-        // ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height)
+const game = () => {
+    const playerMain = new Player(window.innerWidth * 0.05, 500, 75, 75)
+    const bullets = []
+    const enemies = []
+    let frame = 0
+    let score = 0
 
-    playerMain.update()
-    bullets.forEach((b) => { b.update() })
-    enemies.forEach((b) => { b.update() })
-
-    if (KEYS.spaceBar) {
-        bullets.push(new Bullet(playerMain.x + (playerMain.w), playerMain.y + (playerMain.h / 2)))
-            // fireSound.play()
+    const drawScore = () => {
+        ctx.font = "30px Verdana";
+        // Create gradient
+        var gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+        gradient.addColorStop("0", " magenta");
+        gradient.addColorStop("0.5", "blue");
+        gradient.addColorStop("1.0", "red");
+        // Fill with gradient
+        ctx.fillStyle = gradient;
+        ctx.fillText(`Score : ${score}`, (window.innerWidth / 2) - 100, 35);
     }
 
-    // hit
-    bullets.forEach((bullet, bullet_i) => {
-        enemies.forEach((enemy, enemy_i) => {
-            if (bullet.x > enemy.x &&
-                bullet.x < enemy.x + 75 &&
-                bullet.y > enemy.y &&
-                bullet.y < enemy.y + 50
-            ) {
-                enemies.splice(enemy_i, 1)
-                    // dieSound.play()
+    const animate = () => {
+        ctx.fillStyle = 'white'
+        ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+        drawScore(0)
+        playerMain.update()
+        bullets.forEach((b) => { b.update() })
+        enemies.forEach((b) => { b.update() })
+
+        if (KEYS.spaceBar) {
+            bullets.push(new Bullet(playerMain.x + (playerMain.w), playerMain.y + (playerMain.h / 2)))
+        }
+
+        // hit
+        bullets.forEach((bullet, bullet_i) => {
+            if (bullet.x > window.width) bullets.splice(bullet_i, 1)
+            enemies.forEach((enemy, enemy_i) => {
+                if (bullet.x > enemy.x &&
+                    bullet.x < enemy.x + 75 &&
+                    bullet.y > enemy.y &&
+                    bullet.y < enemy.y + 50
+                ) {
+                    enemies.splice(enemy_i, 1)
+                    score++
+                }
+            })
+        })
+
+        // game over
+        enemies.forEach((enemy) => {
+            if (enemy.x < playerMain.x + playerMain.w) {
+                alert("Game Over")
+
+                cancelAnimationFrame()
             }
         })
-    })
 
-    // game over
-    enemies.forEach((enemy) => {
-        if (enemy.x < playerMain.x + playerMain.w) {
-            alert("Game Over")
-            cancelAnimationFrame()
-        }
-    })
+        if (frame % 120 == 0) enemies.push(new Enemy())
+        frame++
+        requestAnimationFrame(animate)
+    }
 
-    if (frame % 120 == 0) enemies.push(new Enemy())
-    frame++
-    requestAnimationFrame(animate)
+    animate()
 }
-
-animate()

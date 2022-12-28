@@ -10,7 +10,6 @@ class Player {
     }
 
     draw() {
-        ctx.fillStyle = 'red'
         ctx.drawImage(this.img, this.x, this.y, this.w, this.h)
     }
 
@@ -18,6 +17,5 @@ class Player {
         this.draw()
         if (KEYS.arrowUp) this.y -= this.speed
         if (KEYS.arrowDown) this.y += this.speed
-        if (KEYS.spaceBar) console.log("shoot");
     }
 }
