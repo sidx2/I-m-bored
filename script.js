@@ -8,18 +8,26 @@ canvas.width = window.innerWidth
 const backgroundMusic = new Audio("./assets/audio/bg.mp3")
 backgroundMusic.loop = true
 
-window.onload = () => {
-    const OK = confirm("Up Down Arrow Keys to move\nSpace bar to shoot")
+let OK
+window.onload = async() => {
+    beforeStart.innerText = 'Click Anywhere to start'
+    OK = await confirm("Up Down Arrow Keys to move\nSpace bar to shoot")
+    if (OK == true || OK == false) {
+        preGame()
+    }
 }
 
-window.addEventListener("click", (e) => {
-    beforeStart.style.display = 'none'
-    canvas.style.display = 'flex'
-    game()
-    backgroundMusic.play()
-})
+const preGame = () => {
+    window.addEventListener("click", (e) => {
+        beforeStart.style.display = 'none'
+        canvas.style.display = 'flex'
+        if (OK) game()
+    })
+}
+
 
 const game = () => {
+    backgroundMusic.play()
     const playerMain = new Player(window.innerWidth * 0.05, 500, 75, 75)
     const bullets = []
     const enemies = []
@@ -41,7 +49,6 @@ const game = () => {
     const animate = () => {
         ctx.fillStyle = 'white'
         ctx.fillRect(0, 0, canvas.width, canvas.height)
-
         drawScore(0)
         playerMain.update()
         bullets.forEach((b) => { b.update() })
@@ -53,7 +60,7 @@ const game = () => {
 
         // hit
         bullets.forEach((bullet, bullet_i) => {
-            if (bullet.x > window.width) bullets.splice(bullet_i, 1)
+            if (bullet.x > canvas.width) bullets.splice(bullet_i, 1)
             enemies.forEach((enemy, enemy_i) => {
                 if (bullet.x > enemy.x &&
                     bullet.x < enemy.x + 75 &&
