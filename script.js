@@ -48,7 +48,7 @@ const game = () => {
         gradient.addColorStop("1.0", "red");
         // Fill with gradient
         ctx.fillStyle = gradient;
-        ctx.fillText(`Score : ${score <= 22 ? score : "🤯"}`, (window.innerWidth / 2) - 150, 35);
+        ctx.fillText(`Score : ${score}`, (window.innerWidth / 2) - 150, 35);
     }
 
     const drawLevel = () => {
