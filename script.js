@@ -48,7 +48,7 @@ const game = () => {
         gradient.addColorStop("1.0", "red");
         // Fill with gradient
         ctx.fillStyle = gradient;
-        ctx.fillText(`Score : ${score}`, (window.innerWidth / 2) - 150, 35);
+        ctx.fillText(`Score : ${score <= 22 ? score : "🤯"}`, (window.innerWidth / 2) - 150, 35);
     }
 
     const drawLevel = () => {
@@ -60,7 +60,7 @@ const game = () => {
         gradient.addColorStop("1.0", "red");
         // Fill with gradient
         ctx.fillStyle = gradient;
-        ctx.fillText(`Level : ${level}`, (window.innerWidth / 2) + 50, 35);
+        ctx.fillText(`Level : ${level <= 22 ? level : "🤯"}`, (window.innerWidth / 2) + 50, 35);
     }
 
     const animate = () => {
@@ -104,7 +104,7 @@ const game = () => {
         if (updateSpeed && score > 1 && score % 10 == 0) {
             playerMain.speed += 1
             GAME_SPEED++
-            ENEMY_SPAN_RATE -= ENEMY_SPAN_RATE > 10 ? 10 : 1
+            if(ENEMY_SPAN_RATE > 1)ENEMY_SPAN_RATE -= ENEMY_SPAN_RATE > 10 ? 10 : 1
             level++
             updateSpeed = false
         }
