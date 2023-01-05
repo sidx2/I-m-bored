@@ -2,7 +2,7 @@ class Enemy {
     constructor() {
         this.x = window.innerWidth * 0.95
         this.y = (Math.random() * (canvas.height - 100)) + 75
-        this.speed = 5
+        this.speed = 5 + GAME_SPEED
         this.img = new Image()
         this.img.src = "./assets/images/enemy.png"
     }

@@ -4,7 +4,7 @@ class Player {
         this.w = w
         this.y = y
         this.x = x
-        this.speed = 7
+        this.speed = 7 + (GAME_SPEED * 2)
         this.img = new Image()
         this.img.src = "./assets/images/player.png"
     }

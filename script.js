@@ -8,7 +8,12 @@ canvas.width = window.innerWidth
 const backgroundMusic = new Audio("./assets/audio/bg.mp3")
 backgroundMusic.loop = true
 
+let GAME_SPEED = 0
+let ENEMY_SPAN_RATE = 120
+let level = 1
+let updateSpeed = true
 let OK
+
 window.onload = async() => {
     beforeStart.innerText = 'Click Anywhere to start'
     OK = await confirm("Up Down Arrow Keys to move\nSpace bar to shoot")
@@ -43,13 +48,26 @@ const game = () => {
         gradient.addColorStop("1.0", "red");
         // Fill with gradient
         ctx.fillStyle = gradient;
-        ctx.fillText(`Score : ${score}`, (window.innerWidth / 2) - 100, 35);
+        ctx.fillText(`Score : ${score}`, (window.innerWidth / 2) - 150, 35);
+    }
+
+    const drawLevel = () => {
+        ctx.font = "30px Verdana";
+        // Create gradient
+        var gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+        gradient.addColorStop("0", " magenta");
+        gradient.addColorStop("0.5", "gray");
+        gradient.addColorStop("1.0", "red");
+        // Fill with gradient
+        ctx.fillStyle = gradient;
+        ctx.fillText(`Level : ${level}`, (window.innerWidth / 2) + 50, 35);
     }
 
     const animate = () => {
         ctx.fillStyle = 'white'
         ctx.fillRect(0, 0, canvas.width, canvas.height)
         drawScore(0)
+        drawLevel()
         playerMain.update()
         bullets.forEach((b) => { b.update() })
         enemies.forEach((b) => { b.update() })
@@ -82,7 +100,15 @@ const game = () => {
             }
         })
 
-        if (frame % 120 == 0) enemies.push(new Enemy())
+        if (frame % ENEMY_SPAN_RATE == 0) enemies.push(new Enemy())
+        if (updateSpeed && score > 1 && score % 10 == 0) {
+            playerMain.speed += 1
+            GAME_SPEED++
+            ENEMY_SPAN_RATE -= ENEMY_SPAN_RATE > 10 ? 10 : 1
+            level++
+            updateSpeed = false
+        }
+        if (score > 1 && score % 10 != 0) updateSpeed = true
         frame++
         requestAnimationFrame(animate)
     }

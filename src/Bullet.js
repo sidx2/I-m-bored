@@ -4,7 +4,7 @@ class Bullet {
         this.y = y
         this.h = 2
         this.w = 10
-        this.speed = 40
+        this.speed = 40 + GAME_SPEED
     }
     draw() {
         ctx.fillStyle = 'red'
